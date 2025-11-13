@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<title>Mini Mediespiller</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+  }
+  #playlist {
+    list-style: none;
+    padding: 0;
+  }
+  #playlist li {
+    cursor: pointer;
+    padding: 5px;
+  }
+  #playlist li.active {
+    background-color: #ddd;
+    font-weight: bold;
+  }
+  button {
+    margin: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Panda Radio</h1>
+
+<audio id="audio" controls></audio>
+<br>
+<button onclick="prevSong()">⏮️ Previous</button>
+<button onclick="playPause()">▶️ Play/Pause</button>
+<button onclick="nextSong()">⏭️ Next</button>
+
+<h2>Spilleliste</h2>
+<ul id="playlist">
+  <li onclick="playSong(0)">Team Panda</li>
+  <li onclick="playSong(1)">Panda Theme song</li>
+  <li onclick="playSong(2)">The code's Divine</li>
+  <li onclick="playSong(3)">Fredag</li>
+</ul>
+<script>
+  const playlist = ['Team Panda.mp3', 'Panda Theme Song!.mp3', 'The Codes Divine.mp3', 'Fredag.mp3'];
+  let current = 0;
+  const audio = document.getElementById('audio');
+  const playlistEl = document.getElementById('playlist');
+
+  // Start med første sang
+  audio.src = playlist[current];
+  updateActive();
+
+  function playPause() {
+    if(audio.paused) audio.play();
+    else audio.pause();
+  }
+
+  function nextSong() {
+    current = current + 1;
+    if(current >= playlist.length){
+      current = 0; // Gå tilbake til første sang
+    }
+    audio.src = playlist[current];
+    audio.play();
+    updateActive();
+  }
+
+  function prevSong() {
+    current = current - 1;
+    if(current < 0){
+      current = playlist.length - 1; // Gå til siste sang
+    }
+    audio.src = playlist[current];
+    audio.play();
+    updateActive();
+  }
+
+  function playSong(index) {
+    current = index;
+    audio.src = playlist[current];
+    audio.play();
+    updateActive();
+  }
+
+  function updateActive() {
+    const items = playlistEl.getElementsByTagName('li');
+    for(let i=0; i<items.length; i++){
+      items[i].classList.remove('active');
+    }
+    items[current].classList.add('active');
+  }
+
+  // Spill neste automatisk når sangen er ferdig
+  audio.onended = function() {
+    nextSong();
+  };
+</script>
+
+</body>
+</html>
